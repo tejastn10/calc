@@ -3,9 +3,14 @@
 import sys
 
 # Import QApplication and the required widgets from PyQt5.QtWidgets
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
 
 __version__ = '0.1'
 
@@ -21,9 +26,15 @@ class CalcUi(QMainWindow):
         # Set some main window's properties
         self.setWindowTitle('Calc')
         self.setFixedSize(235, 235)
-        # Set the central widget
+        # Set the central widget and general layout
+        self.generalLayout = QVBoxLayout()
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
+        self._centralWidget.setLayout(self.generalLayout)
+        # Create the display and the buttons
+        self._createDisplay()
+        self._createButtons()
+
 
 # Client code
 
