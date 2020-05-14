@@ -35,6 +35,17 @@ class CalcUi(QMainWindow):
         self._createDisplay()
         self._createButtons()
 
+    def _createDisplay(self):
+        """Create the display."""
+        # Create the display widget
+        self.display = QLineEdit()
+        # Set some display's properties
+        self.display.setFixedHeight(35)
+        self.display.setAlignment(Qt.AlignRight)
+        self.display.setReadOnly(True)
+        # Add the display to the general layout
+        self.generalLayout.addWidget(self.display)
+
 
 # Client code
 
