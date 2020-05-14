@@ -16,6 +16,9 @@ from functools import partial
 
 __version__ = '0.1'
 
+ERROR_MSG = 'ERROR'
+
+
 # Create a subclass of QMainWindow to setup the calculator's GUI
 
 
@@ -95,20 +98,40 @@ class CalcUi(QMainWindow):
         """Clear the display."""
         self.setDisplayText('')
 
+
+# Create a Model to handle the calculator's operation
+def evaluateExpression(expression):
+    """Evaluate an expression."""
+    try:
+        result = str(eval(expression, {}, {}))
+    except Exception:
+        result = ERROR_MSG
+
+    return result
+
 # Create a Controller class to connect the GUI and the model
 
 
 class CalcCtrl:
     """Calc Controller class."""
 
-    def __init__(self, view):
+    def __init__(self, model, view):
         """Controller initializer."""
+        self._evaluate = model
         self._view = view
         # Connect signals and slots
         self._connectSignals()
 
+    def _calculateResult(self):
+        """Evaluate expressions."""
+        result = self._evaluate(expression=self._view.displayText())
+        self._view.setDisplayText(result)
+
     def _buildExpression(self, sub_exp):
         """Build expression."""
+        if self._view.displayText() == ERROR_MSG:
+            self._view.clearDisplay()
+
         expression = self._view.displayText() + sub_exp
         self._view.setDisplayText(expression)
 
@@ -118,6 +141,8 @@ class CalcCtrl:
             if btnText not in {'=', 'C'}:
                 btn.clicked.connect(partial(self._buildExpression, btnText))
 
+        self._view.buttons['='].clicked.connect(self._calculateResult)
+        self._view.display.returnPressed.connect(self._calculateResult)
         self._view.buttons['C'].clicked.connect(self._view.clearDisplay)
 
 # Client code
@@ -131,7 +156,8 @@ def main():
     view = CalcUi()
     view.show()
     # Create instances of the model and the controller
-    CalcCtrl(view=view)
+    model = evaluateExpression
+    CalcCtrl(model=model, view=view)
     # Execute the calculator's main loop
     sys.exit(calc.exec_())
 
