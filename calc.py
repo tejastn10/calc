@@ -80,6 +80,19 @@ class CalcUi(QMainWindow):
         # Add buttonsLayout to the general layout
         self.generalLayout.addLayout(buttonsLayout)
 
+    def setDisplayText(self, text):
+        """Set display's text."""
+        self.display.setText(text)
+        self.display.setFocus()
+
+    def displayText(self):
+        """Get display's text."""
+        return self.display.text()
+
+    def clearDisplay(self):
+        """Clear the display."""
+        self.setDisplayText('')
+
 
 # Client code
 
